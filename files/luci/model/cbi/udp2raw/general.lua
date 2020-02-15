@@ -36,4 +36,7 @@ for u in luci.util.execi("cat /etc/passwd | cut -d ':' -f1") do o:value(u) end
 o.default = "root"
 o.rmempty = false
 
+o = s:option(Flag, "log", translate("Log"), translate("Forward stdout of the command to logd"))
+o.default = "0"
+
 return m

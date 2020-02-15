@@ -74,7 +74,7 @@ create_config() {
 
         [ -n "$dev" ] && echo "--dev ${dev}" >> $config_file
         [ -n "$sock_buf" ] && echo "--sock-buf ${sock_buf}" >> $config_file
-        [ $$foce_sock_buf -eq 1 ] && echo "--force-sock-buf" >> $config_file
+        [ $force_sock_buf -eq 1 ] && echo "--force-sock-buf" >> $config_file
 
 	[ -n "$log_level" ] && echo "--log-level ${log_level}" >> $config_file
 	echo "--disable-color" >> $config_file
@@ -84,6 +84,7 @@ validate_config_section() {
 	local ret=$(/sbin/validate_data "$NAME" general "$1" \
 		'server:uciname' \
 		'daemon_user:string:root' \
+                'log:bool:0' \
 		2> /dev/null)
 	[ $? -ne 0 ] && return 1
 	eval "$ret"

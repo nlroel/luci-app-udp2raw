@@ -76,7 +76,7 @@ create_config() {
 
         [ -n "$dev" ] && echo "--dev ${dev}" >> $config_file
         [ -n "$sock_buf" ] && echo "--sock-buf ${sock_buf}" >> $config_file
-        [ $$foce_sock_buf -eq 1 ] && echo "--force-sock-buf" >> $config_file
+        [ $force_sock_buf -eq 1 ] && echo "--force-sock-buf" >> $config_file
 
 	[ -n "$log_level" ] && echo "--log-level ${log_level}" >> $config_file
 	echo "--disable-color" >> $config_file
@@ -85,7 +85,8 @@ create_config() {
 validate_config_section() {
 	uci_validate_section "$NAME" general "$1" \
 		'server:uciname' \
-		'daemon_user:string:root'
+		'daemon_user:string:root' \
+                'log:bool:0'
 }
 
 validate_server_section() {
@@ -145,6 +146,8 @@ start_instance() {
 	procd_set_param file "$config_file"
 	[ -n "$daemon_user" ] && procd_set_param user "$daemon_user" && _log "info" "running from ${daemon_user} user"
 	procd_set_param pidfile "/var/run/${NAME}.${server}.pid"
+        [ $log -eq 1 ]  && procd_set_param stdout 1
+        procd_set_param stderr 1
 	procd_close_instance
 }
 
